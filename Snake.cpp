@@ -1,6 +1,6 @@
 /*  Snake.cpp
-    Filipe Fernandes
-    Goncalo Cabrita, 34422
+    Goncalo Cabrita,    34422
+    Filipe Fernandes,   34525
 
     LAP - Project 3
 */
@@ -347,7 +347,7 @@ void TimerHandlerFun() { control->TimerHandler(); }
 
 string GameControlClass::appName = "Snake!";
 string GameControlClass::authors =
-                "Otelo Silva Santos 12345, Desdémona da Martinica 99999";
+                "Gonçalo Cabrita 34422, Filipe Fernandes 34525";
 string GameControlClass::version = "FCT/UNL, 2012";
 
 GameControlClass::GameControlClass()
