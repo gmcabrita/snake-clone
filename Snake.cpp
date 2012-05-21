@@ -10,6 +10,7 @@
 #include <sstream>
 #include <iostream> // TODO: tirar
 #include <vector>
+#include <list>
 
 using namespace std;
 
@@ -252,7 +253,7 @@ class Actor { // "Interface"
     virtual void Hide() const =0;
     virtual void Show() const =0;
     virtual void Animation() =0;
-    virtual void KeyHandler(int dx, int xy) =0;
+    virtual void KeyHandler(int dx, int dy) =0;
 // TODO: If necessary, more methods
 };
 
@@ -264,7 +265,7 @@ class ActorClass: public Actor {
     void Hide() const;
     void Show() const;
     void Animation();
-    void KeyHandler(int dx, int xy);
+    void KeyHandler(int dx, int dy);
   protected:
     int x, y;
     int img;
@@ -295,20 +296,21 @@ class SnakeClass: public ActorClass {
     virtual ~SnakeClass();
     void KeyHandler(int dx, int dy);
     void Animation();
+    virtual void addBlock(ActorClass *s);
 
 // TODO: If necessary, more methods
 private:
     int dx;
     int dy;
-    vector<ActorClass *> rest ;
+    list<ActorClass *> rest ;
 };
 
-class SnakeTailClass: public ActorClass {
+class SnakeTailClass: public SnakeClass {
   public:
     SnakeTailClass(int x, int y, int dx, int dy);
     virtual ~SnakeTailClass();
     void Animation();
-    void KeyHandler(int dx, int dy);
+    virtual void KeyHandler(int dx, int dy);
 
   private:
     int dx;
@@ -386,7 +388,6 @@ void ActorClass::Hide() const
     tyDrawImage(empty_img, x * ACTOR_SIZE, y * ACTOR_SIZE);
 }
 
-
 /* Concrete classes implementation */
 
 ShrubClass::ShrubClass(int x, int y): ActorClass(x, y, shrub_img) {}
@@ -409,7 +410,6 @@ SnakeClass::SnakeClass(int x, int y, int img):
     ActorClass(x, y, img) {
     dx = 0;
     dy = -1;
-    rest.push_back((new SnakeTailClass(x, y + 1, dx, dy)));
 }
 SnakeClass::~SnakeClass() {}
     
@@ -439,8 +439,16 @@ void SnakeClass::Animation()
         y = ny;
         Show();
         control->Set(x, y, this);
-        rest.front()->Animation();
-        rest.front()->KeyHandler(this->dx, this->dy);
+
+        SnakeTailClass *prev;
+        SnakeTailClass *curr;
+        for (list<ActorClass*>::iterator i = rest.begin(); i != rest.end(); ++i)
+        {
+            curr = dynamic_cast<SnakeTailClass *>(*i);
+            curr->Animation();
+            curr->KeyHandler(dx, dy);
+            prev = curr;
+        }
     }
 }
 
@@ -452,8 +460,13 @@ void SnakeClass::KeyHandler(int dx, int dy)
     }
 }
 
-SnakeTailClass::SnakeTailClass(int x, int y, int dx, int dy):
-        ActorClass(x, y, snakeTail_img) {
+void SnakeClass::addBlock(ActorClass *s)
+{
+    rest.push_front(s);
+}
+
+SnakeTailClass::SnakeTailClass(int x, int y, int dx = 0, int dy = -1):
+        SnakeClass(x, y, snakeTail_img) {
     this->dx = dx;
     this->dy = dy;
 }
@@ -561,7 +574,7 @@ void GameControlClass::TimerHandler()
         tySetStatusText(2, ss.str().c_str());
     }
 
-    if( time % 1 == 0) {
+    if( time % 5 == 0) {
         snake->Animation();
     }
     time++;
@@ -598,8 +611,15 @@ void GameControlClass::BuildBoard()
     snakeX = tyRand(SWAMP_WIDTH);
     snakeY = tyRand(SWAMP_HEIGHT);
 
-    snake = new SnakeClass(snakeX, snakeY, snakeHead_img);
-    swamp[snakeX][snakeY] = snake;
+    SnakeClass *s = new SnakeClass(snakeX, snakeY, snakeHead_img);
+    swamp[snakeX][snakeY] = snake = s;
+
+    SnakeTailClass *t = new SnakeTailClass(snakeX, snakeY + 2);
+    swamp[snakeX][snakeY + 2] = t;
+    s->addBlock(t);
+    t = new SnakeTailClass(snakeX, snakeY + 1);
+    swamp[snakeX][snakeY + 1] = t;
+    s->addBlock(t);
 
     for (int i = 0; i < 10; i++)
     {
