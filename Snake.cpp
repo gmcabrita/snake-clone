@@ -293,21 +293,26 @@ class SnakeClass: public ActorClass {
   public:
     SnakeClass(int x, int y, int img);
     virtual ~SnakeClass();
-    void KeyHandler(int dx, int xy);
+    void KeyHandler(int dx, int dy);
     void Animation();
 
 // TODO: If necessary, more methods
-protected:
+private:
     int dx;
     int dy;
     vector<ActorClass *> rest ;
 };
 
-class SnakeTailClass: public SnakeClass {
+class SnakeTailClass: public ActorClass {
   public:
     SnakeTailClass(int x, int y, int dx, int dy);
     virtual ~SnakeTailClass();
     void Animation();
+    void KeyHandler(int dx, int dy);
+
+  private:
+    int dx;
+    int dy;
 };
 
 class GameControl { // "Interface"
@@ -404,6 +409,7 @@ SnakeClass::SnakeClass(int x, int y, int img):
     ActorClass(x, y, img) {
     dx = 0;
     dy = -1;
+    rest.push_back((new SnakeTailClass(x, y + 1, dx, dy)));
 }
 SnakeClass::~SnakeClass() {}
     
@@ -425,13 +431,16 @@ void SnakeClass::Animation()
         tyQuit();
     }
 
-    if( control->Get(nx, ny) == 0 ) {
+    if( control->Get(nx, ny) == 0 )
+    {
         Hide();
         control->Set(x, y, 0);
         x = nx;
         y = ny;
         Show();
         control->Set(x, y, this);
+        rest.front()->Animation();
+        rest.front()->KeyHandler(this->dx, this->dy);
     }
 }
 
@@ -444,7 +453,7 @@ void SnakeClass::KeyHandler(int dx, int dy)
 }
 
 SnakeTailClass::SnakeTailClass(int x, int y, int dx, int dy):
-        SnakeClass(x, y, snakeTail_img) {
+        ActorClass(x, y, snakeTail_img) {
     this->dx = dx;
     this->dy = dy;
 }
@@ -452,7 +461,26 @@ SnakeTailClass::SnakeTailClass(int x, int y, int dx, int dy):
 SnakeTailClass::~SnakeTailClass() {}
 
 void SnakeTailClass::Animation() {
-    // TODO
+    int w = GameControlClass::SWAMP_WIDTH;
+    int h = GameControlClass::SWAMP_HEIGHT;
+    int nx = (x + w + dx) % w;
+    int ny = (y + h + dy) % h;
+
+    if( control->Get(nx, ny) == 0 )
+    {
+        Hide();
+        control->Set(x, y, 0);
+        x = nx;
+        y = ny;
+        Show();
+        control->Set(x, y, this);
+    }
+}
+
+void SnakeTailClass::KeyHandler(int dx, int dy)
+{
+    this->dx = dx;
+    this->dy = dy;
 }
 
 /* GameControlClass implementation */
@@ -567,23 +595,24 @@ void GameControlClass::BuildBoard()
 {
     FreeBoard();
     int snakeX, snakeY, shrubX, shrubY, berryX, berryY;
-    snakeX = tyRand(GameControlClass::SWAMP_WIDTH);
-    snakeY = tyRand(GameControlClass::SWAMP_HEIGHT);
+    snakeX = tyRand(SWAMP_WIDTH);
+    snakeY = tyRand(SWAMP_HEIGHT);
 
-    snake = swamp[snakeX][snakeY] =
-                                new SnakeClass(snakeX, snakeY, snakeHead_img);
+    snake = new SnakeClass(snakeX, snakeY, snakeHead_img);
+    swamp[snakeX][snakeY] = snake;
+
     for (int i = 0; i < 10; i++)
     {
         do
         {
-            berryX = tyRand(GameControlClass::SWAMP_WIDTH);
-            berryY = tyRand(GameControlClass::SWAMP_HEIGHT);
+            berryX = tyRand(SWAMP_WIDTH);
+            berryY = tyRand(SWAMP_HEIGHT);
         } while (this->Get(berryX, berryY) != 0);
 
         do
         {
-            shrubX = tyRand(GameControlClass::SWAMP_WIDTH);
-            shrubY = tyRand(GameControlClass::SWAMP_HEIGHT);
+            shrubX = tyRand(SWAMP_WIDTH);
+            shrubY = tyRand(SWAMP_HEIGHT);
         } while (this->Get(shrubX, shrubY) != 0);
 
         swamp[berryX][berryY] = new BerryClass(berryX, berryY, berryBlue_img);
