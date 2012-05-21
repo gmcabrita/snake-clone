@@ -299,7 +299,7 @@ class SnakeClass: public ActorClass {
     virtual void addBlock(ActorClass *s);
 
 // TODO: If necessary, more methods
-private:
+  private:
     int dx;
     int dy;
     list<ActorClass *> rest ;
@@ -431,7 +431,7 @@ void SnakeClass::Animation()
         tyQuit();
     }
 
-    if( control->Get(nx, ny) == 0 )
+    if( neighbor == 0 )
     {
         Hide();
         control->Set(x, y, 0);
@@ -439,16 +439,17 @@ void SnakeClass::Animation()
         y = ny;
         Show();
         control->Set(x, y, this);
+    }
 
-        SnakeTailClass *prev;
-        SnakeTailClass *curr;
-        for (list<ActorClass*>::iterator i = rest.begin(); i != rest.end(); ++i)
-        {
-            curr = dynamic_cast<SnakeTailClass *>(*i);
-            curr->Animation();
-            curr->KeyHandler(dx, dy);
-            prev = curr;
-        }
+    // TODO: fix steering updates
+    SnakeClass *prev = this;
+    SnakeClass *curr;
+    for (list<ActorClass*>::iterator i = rest.begin(); i != rest.end(); ++i)
+    {
+        curr = dynamic_cast<SnakeTailClass *>(*i);
+        curr->Animation();
+        curr->KeyHandler(prev->dx, prev->dy);
+        prev = curr;
     }
 }
 
