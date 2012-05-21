@@ -8,6 +8,7 @@
 #include "wxTiny.h"
 #include <string>
 #include <sstream>
+#include <iostream> // TODO: tirar
 #include <vector>
 
 using namespace std;
@@ -168,6 +169,9 @@ void CreateImg()
 
 /* Declaration of all the classes */
 
+class Edible { // "Interface"
+};
+
 class Actor { // "Interface"
   public:
     virtual ~Actor();
@@ -199,11 +203,11 @@ class ShrubClass: public ActorClass {
     virtual ~ShrubClass();
     void Animation();
 // TODO: If necessary, more methods
-private:
+  private:
     vector<ActorClass *> rest ;
 };
 
-class BerryClass: public ActorClass {
+class BerryClass: public ActorClass, public Edible {
   public:
     BerryClass(int x, int y, int img);
     virtual ~BerryClass();
@@ -217,9 +221,24 @@ class SnakeClass: public ActorClass {
     virtual ~SnakeClass();
     void KeyHandler(int dx, int xy);
     void Animation();
+
 // TODO: If necessary, more methods
 private:
+    int dx;
+    int dy;
     vector<ActorClass *> rest ;
+};
+
+class SnakeTailClass: public ActorClass {
+  public:
+    SnakeTailClass(int x, int y, int dx, int dy);
+    virtual ~SnakeTailClass();
+    void KeyHandler(int dx, int dy);
+    void Animation();
+
+  private:
+    int dx;
+    int dy;
 };
 
 class GameControl { // "Interface"
@@ -313,21 +332,30 @@ void BerryClass::Animation()
 }
 
 SnakeClass::SnakeClass(int x, int y):
-    ActorClass(x, y, snakeHead_img) {}
+    ActorClass(x, y, snakeHead_img) {
+    dx = 0;
+    dy = -1;
+}
 SnakeClass::~SnakeClass() {}
     
 void SnakeClass::Animation()
 {
-    // TODO: Implement the Snake behavior
-}
-
-void SnakeClass::KeyHandler(int dx, int dy)
-{
-    // TODO: Remove this code but reuse some ideas in the Animation function
     int w = GameControlClass::SWAMP_WIDTH;
     int h = GameControlClass::SWAMP_HEIGHT;
     int nx = (x + w + dx) % w;
     int ny = (y + h + dy) % h;
+
+    Actor *neighbor = control->Get(nx, ny);
+    if (dynamic_cast<Edible *>(neighbor) != 0) {
+        delete neighbor;
+        control->Set(nx, ny, 0);
+
+    }
+    else if (neighbor != 0 && dynamic_cast<Edible *>(neighbor) == 0) {
+        cout << "YOU FAIL!" << " BOOOO!" << endl;
+        tyQuit();
+    }
+
     if( control->Get(nx, ny) == 0 ) {
         Hide();
         control->Set(x, y, 0);
@@ -336,6 +364,30 @@ void SnakeClass::KeyHandler(int dx, int dy)
         Show();
         control->Set(x, y, this);
     }
+}
+
+void SnakeClass::KeyHandler(int dx, int dy)
+{
+    if (this->dx + dx != 0 && this->dy + dy != 0) {
+        this->dx = dx;
+        this->dy = dy;
+    }
+}
+
+SnakeTailClass::SnakeTailClass(int x, int y, int dx, int dy):
+        ActorClass(x, y, snakeTail_img) {
+    this->dx = dx;
+    this->dy = dy;
+}
+
+SnakeTailClass::~SnakeTailClass() {}
+
+void SnakeTailClass::Animation() {
+    // TODO
+}
+
+void SnakeTailClass::KeyHandler(int dx, int dy) {
+    // TODO
 }
 
 /* GameControlClass implementation */
@@ -415,6 +467,10 @@ void GameControlClass::TimerHandler()
         ss << "TIME = " << time/10;
         tySetStatusText(2, ss.str().c_str());
     }
+
+    if( time % 1 == 0) {
+        snake->Animation();
+    }
     time++;
 }
 
@@ -445,10 +501,17 @@ void GameControlClass::FreeBoard()
 void GameControlClass::BuildBoard()
 {
     FreeBoard();
-    // TODO: Create initial actors at random places
-    snake = swamp[10][10] = new SnakeClass(10, 10);
-    swamp[12][12] = new ShrubClass(12, 12);
-    swamp[14][14] = new BerryClass(14, 14, berryBlue_img);
+    int snakeX, snakeY, shrubX, shrubY, berryX, berryY;
+    snakeX = tyRand(GameControlClass::SWAMP_WIDTH);
+    shrubX = tyRand(GameControlClass::SWAMP_WIDTH);
+    berryX = tyRand(GameControlClass::SWAMP_WIDTH);
+    snakeY = tyRand(GameControlClass::SWAMP_HEIGHT);
+    shrubY = tyRand(GameControlClass::SWAMP_HEIGHT);
+    berryY = tyRand(GameControlClass::SWAMP_HEIGHT);
+
+    snake = swamp[snakeX][snakeY] = new SnakeClass(snakeX, snakeY);
+    swamp[shrubX][shrubY] = new ShrubClass(shrubX, shrubY);
+    swamp[berryX][berryY] = new BerryClass(berryX, berryY, berryBlue_img);
 }
 
 void GameControlClass::ComandAbout()
