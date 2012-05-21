@@ -568,11 +568,7 @@ void GameControlClass::BuildBoard()
     FreeBoard();
     int snakeX, snakeY, shrubX, shrubY, berryX, berryY;
     snakeX = tyRand(GameControlClass::SWAMP_WIDTH);
-    // shrubX = tyRand(GameControlClass::SWAMP_WIDTH);
-    // berryX = tyRand(GameControlClass::SWAMP_WIDTH);
     snakeY = tyRand(GameControlClass::SWAMP_HEIGHT);
-    // shrubY = tyRand(GameControlClass::SWAMP_HEIGHT);
-    // berryY = tyRand(GameControlClass::SWAMP_HEIGHT);
 
     snake = swamp[snakeX][snakeY] =
                                 new SnakeClass(snakeX, snakeY, snakeHead_img);
@@ -593,8 +589,6 @@ void GameControlClass::BuildBoard()
         swamp[berryX][berryY] = new BerryClass(berryX, berryY, berryBlue_img);
         swamp[shrubX][shrubY] = new ShrubClass(shrubX, shrubY);
     }
-    // swamp[berryX][berryY] = new BerryClass(berryX, berryY, berryBlue_img);
-    // swamp[shrubX][shrubY] = new ShrubClass(shrubX, shrubY);
 }
 
 void GameControlClass::ComandAbout()
