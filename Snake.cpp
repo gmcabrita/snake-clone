@@ -291,28 +291,23 @@ class BerryClass: public ActorClass, public Edible {
 
 class SnakeClass: public ActorClass {
   public:
-    SnakeClass(int x, int y);
+    SnakeClass(int x, int y, int img);
     virtual ~SnakeClass();
     void KeyHandler(int dx, int xy);
     void Animation();
 
 // TODO: If necessary, more methods
-private:
+protected:
     int dx;
     int dy;
     vector<ActorClass *> rest ;
 };
 
-class SnakeTailClass: public ActorClass {
+class SnakeTailClass: public SnakeClass {
   public:
     SnakeTailClass(int x, int y, int dx, int dy);
     virtual ~SnakeTailClass();
-    void KeyHandler(int dx, int dy);
     void Animation();
-
-  private:
-    int dx;
-    int dy;
 };
 
 class GameControl { // "Interface"
@@ -405,8 +400,8 @@ void BerryClass::Animation()
     // TODO: Implement the Berry behavior
 }
 
-SnakeClass::SnakeClass(int x, int y):
-    ActorClass(x, y, snakeHead_img) {
+SnakeClass::SnakeClass(int x, int y, int img):
+    ActorClass(x, y, img) {
     dx = 0;
     dy = -1;
 }
@@ -449,7 +444,7 @@ void SnakeClass::KeyHandler(int dx, int dy)
 }
 
 SnakeTailClass::SnakeTailClass(int x, int y, int dx, int dy):
-        ActorClass(x, y, snakeTail_img) {
+        SnakeClass(x, y, snakeTail_img) {
     this->dx = dx;
     this->dy = dy;
 }
@@ -457,10 +452,6 @@ SnakeTailClass::SnakeTailClass(int x, int y, int dx, int dy):
 SnakeTailClass::~SnakeTailClass() {}
 
 void SnakeTailClass::Animation() {
-    // TODO
-}
-
-void SnakeTailClass::KeyHandler(int dx, int dy) {
     // TODO
 }
 
@@ -577,15 +568,33 @@ void GameControlClass::BuildBoard()
     FreeBoard();
     int snakeX, snakeY, shrubX, shrubY, berryX, berryY;
     snakeX = tyRand(GameControlClass::SWAMP_WIDTH);
-    shrubX = tyRand(GameControlClass::SWAMP_WIDTH);
-    berryX = tyRand(GameControlClass::SWAMP_WIDTH);
+    // shrubX = tyRand(GameControlClass::SWAMP_WIDTH);
+    // berryX = tyRand(GameControlClass::SWAMP_WIDTH);
     snakeY = tyRand(GameControlClass::SWAMP_HEIGHT);
-    shrubY = tyRand(GameControlClass::SWAMP_HEIGHT);
-    berryY = tyRand(GameControlClass::SWAMP_HEIGHT);
+    // shrubY = tyRand(GameControlClass::SWAMP_HEIGHT);
+    // berryY = tyRand(GameControlClass::SWAMP_HEIGHT);
 
-    snake = swamp[snakeX][snakeY] = new SnakeClass(snakeX, snakeY);
-    swamp[shrubX][shrubY] = new ShrubClass(shrubX, shrubY);
-    swamp[berryX][berryY] = new BerryClass(berryX, berryY, berryBlue_img);
+    snake = swamp[snakeX][snakeY] =
+                                new SnakeClass(snakeX, snakeY, snakeHead_img);
+    for (int i = 0; i < 10; i++)
+    {
+        do
+        {
+            berryX = tyRand(GameControlClass::SWAMP_WIDTH);
+            berryY = tyRand(GameControlClass::SWAMP_HEIGHT);
+        } while (this->Get(berryX, berryY) != 0);
+
+        do
+        {
+            shrubX = tyRand(GameControlClass::SWAMP_WIDTH);
+            shrubY = tyRand(GameControlClass::SWAMP_HEIGHT);
+        } while (this->Get(shrubX, shrubY) != 0);
+
+        swamp[berryX][berryY] = new BerryClass(berryX, berryY, berryBlue_img);
+        swamp[shrubX][shrubY] = new ShrubClass(shrubX, shrubY);
+    }
+    // swamp[berryX][berryY] = new BerryClass(berryX, berryY, berryBlue_img);
+    // swamp[shrubX][shrubY] = new ShrubClass(shrubX, shrubY);
 }
 
 void GameControlClass::ComandAbout()
