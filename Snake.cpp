@@ -8,6 +8,7 @@
 #include "wxTiny.h"
 #include <string>
 #include <sstream>
+#include <iostream> // delete
 #include <vector>
 #include <list>
 
@@ -500,6 +501,7 @@ void SnakeTailClass::Animation(list<ActorClass*>::iterator i,
     control->Set(x, y, this);
 
     // update next tail 'node'
+    // TODO: small fix, sometimes segfaults when the game starts
     SnakeTailClass *s = dynamic_cast<SnakeTailClass*>(*i);
     if (i != j)
     {
