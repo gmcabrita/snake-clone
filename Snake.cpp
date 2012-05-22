@@ -290,33 +290,32 @@ class BerryClass: public ActorClass, public Edible {
 // TODO: If necessary, more methods
 };
 
-class SnakeClass: public ActorClass {
+class SnakeTailClass: public ActorClass {
   public:
-    SnakeClass(int x, int y, int img);
-    virtual ~SnakeClass();
-    void KeyHandler(int dx, int dy);
-    void Animation();
-    virtual void addBlock(ActorClass *s);
-
-// TODO: If necessary, more methods
-  private:
-    int dx;
-    int dy;
-    list<ActorClass *> rest ;
-};
-
-class SnakeTailClass: public SnakeClass {
-  public:
-    SnakeTailClass(int x, int y, int dx, int dy);
+    SnakeTailClass(int x, int y, int dx, int dy, int img);
     virtual ~SnakeTailClass();
     void Animation();
-    virtual void Animation(list<ActorClass*>::iterator i,
-                                                list<ActorClass*>::iterator j);
+    virtual void Animation(list<SnakeTailClass*>::iterator i,
+                                            list<SnakeTailClass*>::iterator j);
     virtual void KeyHandler(int dx, int dy);
 
   private:
     int dx;
     int dy;
+};
+
+class SnakeClass: public ActorClass {
+  public:
+    SnakeClass(int x, int y);
+    virtual ~SnakeClass();
+    void KeyHandler(int dx, int dy);
+    void Animation();
+
+// TODO: If necessary, more methods
+  private:
+    int dx;
+    int dy;
+    list<SnakeTailClass *> rest ;
 };
 
 class GameControl { // "Interface"
@@ -408,63 +407,9 @@ void BerryClass::Animation()
     // TODO: Implement the Berry behavior
 }
 
-SnakeClass::SnakeClass(int x, int y, int img):
-    ActorClass(x, y, img) {
-    dx = 0;
-    dy = -1;
-}
-SnakeClass::~SnakeClass() {}
-    
-void SnakeClass::Animation()
-{
-    int w = GameControlClass::SWAMP_WIDTH;
-    int h = GameControlClass::SWAMP_HEIGHT;
-    int nx = (x + w + dx) % w;
-    int ny = (y + h + dy) % h;
-
-    Actor *neighbor = control->Get(nx, ny);
-    if (dynamic_cast<Edible *>(neighbor) != 0) {
-        delete neighbor;
-        control->Set(nx, ny, 0);
-
-    }
-    else if (neighbor != 0 && dynamic_cast<Edible *>(neighbor) == 0) {
-        tyAlertDialog("Loss", "You fail!");
-        tyQuit();
-    }
-
-    if( neighbor == 0 )
-    {
-        Hide();
-        control->Set(x, y, 0);
-        x = nx;
-        y = ny;
-        Show();
-        control->Set(x, y, this);
-    }
-
-    list<ActorClass*>::iterator i = rest.begin();
-    
-    SnakeTailClass *s = dynamic_cast<SnakeTailClass *>(*i);
-    s->Animation(++i, rest.end());
-    s->KeyHandler(this->dx, this->dy);
-}
-
-void SnakeClass::KeyHandler(int dx, int dy)
-{
-    if (this->dx + dx != 0 && this->dy + dy != 0) {
-        this->dx = dx;
-        this->dy = dy;
-    }
-}
-
-void SnakeClass::addBlock(ActorClass *s)
-{
-    rest.push_front(s);
-}
-
-SnakeTailClass::SnakeTailClass(int x, int y, int dx = 0, int dy = -1):
-        SnakeClass(x, y, snakeTail_img) {
+SnakeTailClass::SnakeTailClass(int x, int y, int dx = 0,
+                                        int dy = -1, int img = snakeTail_img):
+        ActorClass(x, y, img) {
     this->dx = dx;
     this->dy = dy;
 }
@@ -486,8 +431,8 @@ void SnakeTailClass::Animation()
     control->Set(x, y, this);
 }
 
-void SnakeTailClass::Animation(list<ActorClass*>::iterator i,
-                                list<ActorClass*>::iterator j) {
+void SnakeTailClass::Animation(list<SnakeTailClass*>::iterator i,
+                                list<SnakeTailClass*>::iterator j) {
     int w = GameControlClass::SWAMP_WIDTH;
     int h = GameControlClass::SWAMP_HEIGHT;
     int nx = (x + w + dx) % w;
@@ -501,8 +446,7 @@ void SnakeTailClass::Animation(list<ActorClass*>::iterator i,
     control->Set(x, y, this);
 
     // update next tail 'node'
-    // TODO: small fix, sometimes segfaults when the game starts
-    SnakeTailClass *s = dynamic_cast<SnakeTailClass*>(*i);
+    SnakeTailClass *s = *i;
     if (i != j)
     {
         s->Animation(++i, j);
@@ -514,6 +458,61 @@ void SnakeTailClass::KeyHandler(int dx, int dy)
 {
     this->dx = dx;
     this->dy = dy;
+}
+
+SnakeClass::SnakeClass(int x, int y):
+    ActorClass(x, y, snakeHead_img) {
+    dx = 0;
+    dy = -1;
+
+    // add snake tail(initially only 1 node)
+    SnakeTailClass *tail = new SnakeTailClass(x, y + 1);
+    this->rest.push_front(tail);
+}
+SnakeClass::~SnakeClass() {}
+    
+void SnakeClass::Animation()
+{
+    int w = GameControlClass::SWAMP_WIDTH;
+    int h = GameControlClass::SWAMP_HEIGHT;
+    int nx = (x + w + dx) % w;
+    int ny = (y + h + dy) % h;
+
+    Actor *neighbor = control->Get(nx, ny);
+    if (dynamic_cast<Edible *>(neighbor) != 0) {
+        delete neighbor;
+        control->Set(nx, ny, 0);
+        neighbor = 0;
+
+    }
+    else if (neighbor != 0 && dynamic_cast<Edible *>(neighbor) == 0) {
+        tyAlertDialog("Loss", "You fail!");
+        tyQuit();
+    }
+
+    if( neighbor == 0 )
+    {
+        Hide();
+        control->Set(x, y, 0);
+        x = nx;
+        y = ny;
+        Show();
+        control->Set(x, y, this);
+
+        list<SnakeTailClass*>::iterator i = rest.begin();
+
+        SnakeTailClass *s = *i;
+        s->Animation(++i, rest.end());
+        s->KeyHandler(this->dx, this->dy);
+    }
+}
+
+void SnakeClass::KeyHandler(int dx, int dy)
+{
+    if (this->dx + dx != 0 && this->dy + dy != 0) {
+        this->dx = dx;
+        this->dy = dy;
+    }
 }
 
 /* GameControlClass implementation */
@@ -631,13 +630,7 @@ void GameControlClass::BuildBoard()
     snakeX = tyRand(SWAMP_WIDTH);
     snakeY = tyRand(SWAMP_HEIGHT);
 
-    SnakeClass *s = new SnakeClass(snakeX, snakeY, snakeHead_img);
-    swamp[snakeX][snakeY] = snake = s;
-
-    // add snake tail(initially only 1 node)
-    SnakeTailClass *t = new SnakeTailClass(snakeX, snakeY + 1);
-    swamp[snakeX][snakeY + 1] = t;
-    s->addBlock(t);
+    swamp[snakeX][snakeY] = snake = new SnakeClass(snakeX, snakeY);
 
     for (int i = 0; i < 10; i++)
     {
