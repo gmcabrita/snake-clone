@@ -8,7 +8,6 @@
 #include "wxTiny.h"
 #include <string>
 #include <sstream>
-#include <iostream> // TODO: tirar
 #include <vector>
 #include <list>
 
@@ -310,6 +309,8 @@ class SnakeTailClass: public SnakeClass {
     SnakeTailClass(int x, int y, int dx, int dy);
     virtual ~SnakeTailClass();
     void Animation();
+    virtual void Animation(list<ActorClass*>::iterator i,
+                                                list<ActorClass*>::iterator j);
     virtual void KeyHandler(int dx, int dy);
 
   private:
@@ -441,16 +442,11 @@ void SnakeClass::Animation()
         control->Set(x, y, this);
     }
 
-    // TODO: fix steering updates
-    SnakeClass *prev = this;
-    SnakeClass *curr;
-    for (list<ActorClass*>::iterator i = rest.begin(); i != rest.end(); ++i)
-    {
-        curr = dynamic_cast<SnakeTailClass *>(*i);
-        curr->Animation();
-        curr->KeyHandler(prev->dx, prev->dy);
-        prev = curr;
-    }
+    list<ActorClass*>::iterator i = rest.begin();
+    
+    SnakeTailClass *s = dynamic_cast<SnakeTailClass *>(*i);
+    s->Animation(++i, rest.end());
+    s->KeyHandler(this->dx, this->dy);
 }
 
 void SnakeClass::KeyHandler(int dx, int dy)
@@ -474,20 +470,41 @@ SnakeTailClass::SnakeTailClass(int x, int y, int dx = 0, int dy = -1):
 
 SnakeTailClass::~SnakeTailClass() {}
 
-void SnakeTailClass::Animation() {
+void SnakeTailClass::Animation()
+{
     int w = GameControlClass::SWAMP_WIDTH;
     int h = GameControlClass::SWAMP_HEIGHT;
     int nx = (x + w + dx) % w;
     int ny = (y + h + dy) % h;
 
-    if( control->Get(nx, ny) == 0 )
+    Hide();
+    control->Set(x, y, 0);
+    x = nx;
+    y = ny;
+    Show();
+    control->Set(x, y, this);
+}
+
+void SnakeTailClass::Animation(list<ActorClass*>::iterator i,
+                                list<ActorClass*>::iterator j) {
+    int w = GameControlClass::SWAMP_WIDTH;
+    int h = GameControlClass::SWAMP_HEIGHT;
+    int nx = (x + w + dx) % w;
+    int ny = (y + h + dy) % h;
+
+    Hide();
+    control->Set(x, y, 0);
+    x = nx;
+    y = ny;
+    Show();
+    control->Set(x, y, this);
+
+    // update next tail 'node'
+    SnakeTailClass *s = dynamic_cast<SnakeTailClass*>(*i);
+    if (i != j)
     {
-        Hide();
-        control->Set(x, y, 0);
-        x = nx;
-        y = ny;
-        Show();
-        control->Set(x, y, this);
+        s->Animation(++i, j);
+        s->KeyHandler(this->dx, this->dy);
     }
 }
 
@@ -615,10 +632,8 @@ void GameControlClass::BuildBoard()
     SnakeClass *s = new SnakeClass(snakeX, snakeY, snakeHead_img);
     swamp[snakeX][snakeY] = snake = s;
 
-    SnakeTailClass *t = new SnakeTailClass(snakeX, snakeY + 2);
-    swamp[snakeX][snakeY + 2] = t;
-    s->addBlock(t);
-    t = new SnakeTailClass(snakeX, snakeY + 1);
+    // add snake tail(initially only 1 node)
+    SnakeTailClass *t = new SnakeTailClass(snakeX, snakeY + 1);
     swamp[snakeX][snakeY + 1] = t;
     s->addBlock(t);
 
