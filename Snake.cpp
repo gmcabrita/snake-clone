@@ -464,9 +464,10 @@ SnakeClass::SnakeClass(int x, int y):
     ActorClass(x, y, snakeHead_img) {
     dx = 0;
     dy = -1;
+    int h = GameControlClass::SWAMP_HEIGHT;
 
     // add snake tail(initially only 1 node)
-    SnakeTailClass *tail = new SnakeTailClass(x, y + 1);
+    SnakeTailClass *tail = new SnakeTailClass(x, (y + h + 1) % h);
     this->rest.push_front(tail);
 }
 SnakeClass::~SnakeClass() {}
