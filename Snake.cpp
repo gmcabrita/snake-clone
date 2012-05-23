@@ -507,6 +507,18 @@ void CreateImg()
     snakeTail_img = tyCreateImage(snakeTail_xpm);
 }
 
+int sinkToNormal(int img)
+{
+    if (img == berryBlueSink_img) return berryBlue_img;
+    else if (img == berryRedSink_img) return berryRed_img;
+    else if (img == berryPinkSink_img) return berryPink_img;
+    else if (img == berryGreenSink_img) return berryGreen_img;
+    else if (img == berryPurpleSink_img) return berryPurple_img;
+    else if (img == berryYellowSink_img) return berryYellow_img;
+
+    return img;
+}
+
 
 /* Declaration of all the classes */
 
@@ -766,7 +778,10 @@ SnakeTailClass::SnakeTailClass(int x, int y, int dx = 0,
     this->dy = dy;
 }
 
-SnakeTailClass::~SnakeTailClass() {}
+SnakeTailClass::~SnakeTailClass()
+{
+    Hide();
+}
 
 void SnakeTailClass::Animation()
 {
@@ -812,25 +827,10 @@ void SnakeTailClass::KeyHandler(int dx, int dy)
     this->dy = dy;
 }
 
-int SnakeTailClass::getDx() const
-{
-    return dx;
-}
-
-int SnakeTailClass::getDy() const
-{
-    return dy;
-}
-
-int SnakeTailClass::getX() const
-{
-    return x;
-}
-
-int SnakeTailClass::getY() const
-{
-    return y;
-}
+int SnakeTailClass::getDx() const { return dx; }
+int SnakeTailClass::getDy() const { return dy; }
+int SnakeTailClass::getX() const { return x; }
+int SnakeTailClass::getY() const { return y; }
 
 SnakeClass::SnakeClass(int x, int y):
     ActorClass(x, y, snakeHead_img) {
@@ -854,14 +854,22 @@ void SnakeClass::Animation()
     Actor *neighbor = control->Get(nx, ny);
     if (dynamic_cast<Edible *>(neighbor) != 0) {
         int img = neighbor->getImg();
-        SnakeTailClass *t = new SnakeTailClass(x, y, 0, 0, img);
+        int img2 = sinkToNormal(img);
+        bool repeat = false;
+        SnakeTailClass *t = new SnakeTailClass(x, y, 0, 0, img2);
         rest.push_front(t);
-
         list<SnakeTailClass*>::iterator j = rest.begin();
+        ++j; // ignore the one we just added
 
-        for (int i = 0; i < 4 && j != rest.end(); i++, ++j)
+        for (int i = 1; i < 5 && j != rest.end(); i++, ++j)
         {
-            if (i == 3) {
+            if ((*j)->getImg() == img2)
+            {
+                repeat = true;
+            }
+
+            if (i == 3)
+            {
                 (*j)->setImg(snakeTail_img);
             }
         }
@@ -877,6 +885,7 @@ void SnakeClass::Animation()
                                 tmp->getDx(), tmp->getDy()));
 
         }
+
         int tx, ty;
         tx = x;
         ty = y;
@@ -886,9 +895,30 @@ void SnakeClass::Animation()
         Show();
         control->Set(x, y, this);
 
-        control->Set(x, y, t);
-        t->Animation();
+        control->Set(tx, ty, t);
+        t->Show();
         t->KeyHandler(dx, dy);
+
+        // TODO: fix this shit
+        if (repeat)
+        {
+            list<SnakeTailClass*>::reverse_iterator x = rest.rbegin();
+            int size = rest.size();
+            for (int i = size; i > size/2 &&
+                x != rest.rend(); i--, --x)
+            {
+                SnakeTailClass *t = (*x);
+                control->Set(t->getX(), t->getY(), 0);
+                t->Hide();
+                delete t;
+            }
+
+            for (int i = size; i > size/2; i--)
+            {
+                rest.pop_back();
+            }
+        }
+
         throw neighbor;
 
     }
@@ -1054,7 +1084,7 @@ void GameControlClass::TimerHandler()
         tySetStatusText(2, ss.str().c_str());
     }
 
-    if( time % 5 == 0) {
+    if( time % 1 == 0) {
         try
         {
             snake->Animation();
