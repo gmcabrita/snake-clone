@@ -87,6 +87,259 @@ XpmImage berryBlue_xpm = {
 "     XXXXX      ",
 "                "};
 
+XpmImage berryBlueSink_xpm = {
+/* columns rows colors chars-per-pixel */
+"16 16 2 1",
+/* colors */
+"X c Blue",
+"  c White",
+"                ",
+"                ",
+"     XXXXX      ",
+"   XXXXXXXXX    ",
+"  XXXXXXXXXXX   ",
+"  XXXXXXXXXXX   ",
+" XXXXXXXXXXXXX  ",
+" XXXXX   XXXXX  ",
+" XXXX     XXXX  ",
+" XXXXX   XXXXX  ",
+" XXXXXXXXXXXXX  ",
+"  XXXXXXXXXXX   ",
+"  XXXXXXXXXXX   ",
+"   XXXXXXXXX    ",
+"     XXXXX      ",
+"                "};
+
+XpmImage berryRed_xpm = {
+/* columns rows colors chars-per-pixel */
+"16 16 2 1",
+/* colors */
+"X c Red",
+"  c White",
+"                ",
+"                ",
+"     XXXXX      ",
+"   XXXXXXXXX    ",
+"  XXXXXXXXXXX   ",
+"  XXXXXXXXXXX   ",
+" XXXXXXXXXXXXX  ",
+" XXXXXXXXXXXXX  ",
+" XXXXXXXXXXXXX  ",
+" XXXXXXXXXXXXX  ",
+" XXXXXXXXXXXXX  ",
+"  XXXXXXXXXXX   ",
+"  XXXXXXXXXXX   ",
+"   XXXXXXXXX    ",
+"     XXXXX      ",
+"                "};
+
+XpmImage berryRedSink_xpm = {
+/* columns rows colors chars-per-pixel */
+"16 16 2 1",
+/* colors */
+"X c Red",
+"  c White",
+"                ",
+"                ",
+"     XXXXX      ",
+"   XXXXXXXXX    ",
+"  XXXXXXXXXXX   ",
+"  XXXXXXXXXXX   ",
+" XXXXXXXXXXXXX  ",
+" XXXXX   XXXXX  ",
+" XXXX     XXXX  ",
+" XXXXX   XXXXX  ",
+" XXXXXXXXXXXXX  ",
+"  XXXXXXXXXXX   ",
+"  XXXXXXXXXXX   ",
+"   XXXXXXXXX    ",
+"     XXXXX      ",
+"                "};
+
+XpmImage berryGreen_xpm = {
+/* columns rows colors chars-per-pixel */
+"16 16 2 1",
+/* colors */
+"X c Green",
+"  c White",
+"                ",
+"                ",
+"     XXXXX      ",
+"   XXXXXXXXX    ",
+"  XXXXXXXXXXX   ",
+"  XXXXXXXXXXX   ",
+" XXXXXXXXXXXXX  ",
+" XXXXXXXXXXXXX  ",
+" XXXXXXXXXXXXX  ",
+" XXXXXXXXXXXXX  ",
+" XXXXXXXXXXXXX  ",
+"  XXXXXXXXXXX   ",
+"  XXXXXXXXXXX   ",
+"   XXXXXXXXX    ",
+"     XXXXX      ",
+"                "};
+
+XpmImage berryGreenSink_xpm = {
+/* columns rows colors chars-per-pixel */
+"16 16 2 1",
+/* colors */
+"X c Green",
+"  c White",
+"                ",
+"                ",
+"     XXXXX      ",
+"   XXXXXXXXX    ",
+"  XXXXXXXXXXX   ",
+"  XXXXXXXXXXX   ",
+" XXXXXXXXXXXXX  ",
+" XXXXX   XXXXX  ",
+" XXXX     XXXX  ",
+" XXXXX   XXXXX  ",
+" XXXXXXXXXXXXX  ",
+"  XXXXXXXXXXX   ",
+"  XXXXXXXXXXX   ",
+"   XXXXXXXXX    ",
+"     XXXXX      ",
+"                "};
+
+XpmImage berryPink_xpm = {
+/* columns rows colors chars-per-pixel */
+"16 16 2 1",
+/* colors */
+"X c Pink",
+"  c White",
+"                ",
+"                ",
+"     XXXXX      ",
+"   XXXXXXXXX    ",
+"  XXXXXXXXXXX   ",
+"  XXXXXXXXXXX   ",
+" XXXXXXXXXXXXX  ",
+" XXXXXXXXXXXXX  ",
+" XXXXXXXXXXXXX  ",
+" XXXXXXXXXXXXX  ",
+" XXXXXXXXXXXXX  ",
+"  XXXXXXXXXXX   ",
+"  XXXXXXXXXXX   ",
+"   XXXXXXXXX    ",
+"     XXXXX      ",
+"                "};
+
+XpmImage berryPinkSink_xpm = {
+/* columns rows colors chars-per-pixel */
+"16 16 2 1",
+/* colors */
+"X c Pink",
+"  c White",
+"                ",
+"                ",
+"     XXXXX      ",
+"   XXXXXXXXX    ",
+"  XXXXXXXXXXX   ",
+"  XXXXXXXXXXX   ",
+" XXXXXXXXXXXXX  ",
+" XXXXX   XXXXX  ",
+" XXXX     XXXX  ",
+" XXXXX   XXXXX  ",
+" XXXXXXXXXXXXX  ",
+"  XXXXXXXXXXX   ",
+"  XXXXXXXXXXX   ",
+"   XXXXXXXXX    ",
+"     XXXXX      ",
+"                "};
+
+XpmImage berryPurple_xpm = {
+/* columns rows colors chars-per-pixel */
+"16 16 2 1",
+/* colors */
+"X c Purple",
+"  c White",
+"                ",
+"                ",
+"     XXXXX      ",
+"   XXXXXXXXX    ",
+"  XXXXXXXXXXX   ",
+"  XXXXXXXXXXX   ",
+" XXXXXXXXXXXXX  ",
+" XXXXXXXXXXXXX  ",
+" XXXXXXXXXXXXX  ",
+" XXXXXXXXXXXXX  ",
+" XXXXXXXXXXXXX  ",
+"  XXXXXXXXXXX   ",
+"  XXXXXXXXXXX   ",
+"   XXXXXXXXX    ",
+"     XXXXX      ",
+"                "};
+
+XpmImage berryPurpleSink_xpm = {
+/* columns rows colors chars-per-pixel */
+"16 16 2 1",
+/* colors */
+"X c Purple",
+"  c White",
+"                ",
+"                ",
+"     XXXXX      ",
+"   XXXXXXXXX    ",
+"  XXXXXXXXXXX   ",
+"  XXXXXXXXXXX   ",
+" XXXXXXXXXXXXX  ",
+" XXXXX   XXXXX  ",
+" XXXX     XXXX  ",
+" XXXXX   XXXXX  ",
+" XXXXXXXXXXXXX  ",
+"  XXXXXXXXXXX   ",
+"  XXXXXXXXXXX   ",
+"   XXXXXXXXX    ",
+"     XXXXX      ",
+"                "};
+
+XpmImage berryYellow_xpm = {
+/* columns rows colors chars-per-pixel */
+"16 16 2 1",
+/* colors */
+"X c Yellow",
+"  c White",
+"                ",
+"                ",
+"     XXXXX      ",
+"   XXXXXXXXX    ",
+"  XXXXXXXXXXX   ",
+"  XXXXXXXXXXX   ",
+" XXXXXXXXXXXXX  ",
+" XXXXXXXXXXXXX  ",
+" XXXXXXXXXXXXX  ",
+" XXXXXXXXXXXXX  ",
+" XXXXXXXXXXXXX  ",
+"  XXXXXXXXXXX   ",
+"  XXXXXXXXXXX   ",
+"   XXXXXXXXX    ",
+"     XXXXX      ",
+"                "};
+
+XpmImage berryYellowSink_xpm = {
+/* columns rows colors chars-per-pixel */
+"16 16 2 1",
+/* colors */
+"X c Yellow",
+"  c White",
+"                ",
+"                ",
+"     XXXXX      ",
+"   XXXXXXXXX    ",
+"  XXXXXXXXXXX   ",
+"  XXXXXXXXXXX   ",
+" XXXXXXXXXXXXX  ",
+" XXXXX   XXXXX  ",
+" XXXX     XXXX  ",
+" XXXXX   XXXXX  ",
+" XXXXXXXXXXXXX  ",
+"  XXXXXXXXXXX   ",
+"  XXXXXXXXXXX   ",
+"   XXXXXXXXX    ",
+"     XXXXX      ",
+"                "};
+
 // XpmImage snakeHead_xpm = {
 // /* columns rows colors chars-per-pixel */
 // "16 16 21 1",
@@ -229,16 +482,29 @@ XpmImage snakeTail_xpm = {
 "................"
 };
 
-int empty_img, shrub_img, berryBlue_img, snakeHead_img, snakeTail_img;
+int empty_img, shrub_img, berryBlue_img, berryBlueSink_img,
+    berryRed_img, berryRedSink_img, berryPink_img, berryPinkSink_img,
+    berryGreen_img, berryGreenSink_img, berryPurple_img, berryPurpleSink_img,
+    berryYellow_img, berryYellowSink_img, snakeHead_img, snakeTail_img;
 
 void CreateImg()
 {
     empty_img = tyCreateImage(empty_xpm);
     shrub_img = tyCreateImage(shrub_xpm);
     berryBlue_img = tyCreateImage(berryBlue_xpm);
+    berryBlueSink_img = tyCreateImage(berryBlueSink_xpm);
+    berryRed_img = tyCreateImage(berryRed_xpm);
+    berryRedSink_img = tyCreateImage(berryRedSink_xpm);
+    berryPink_img = tyCreateImage(berryPink_xpm);
+    berryPinkSink_img = tyCreateImage(berryPinkSink_xpm);
+    berryGreen_img = tyCreateImage(berryGreen_xpm);
+    berryGreenSink_img = tyCreateImage(berryGreenSink_xpm);
+    berryPurple_img = tyCreateImage(berryPurple_xpm);
+    berryPurpleSink_img = tyCreateImage(berryPurpleSink_xpm);
+    berryYellow_img = tyCreateImage(berryYellow_xpm);
+    berryYellowSink_img = tyCreateImage(berryYellowSink_xpm);
     snakeHead_img = tyCreateImage(snakeHead_xpm);
     snakeTail_img = tyCreateImage(snakeTail_xpm);
-// TODO: More images...
 }
 
 
@@ -254,6 +520,10 @@ class Actor { // "Interface"
     virtual void Show() const =0;
     virtual void Animation() =0;
     virtual void KeyHandler(int dx, int dy) =0;
+    virtual int getX() const =0;
+    virtual int getY() const =0;
+    virtual int getImg() const =0;
+    virtual void setImg(int img) =0;
 // TODO: If necessary, more methods
 };
 
@@ -266,6 +536,11 @@ class ActorClass: public Actor {
     void Show() const;
     void Animation();
     void KeyHandler(int dx, int dy);
+    int getX() const;
+    int getY() const;
+    int getImg() const;
+    void setImg(int img);
+
   protected:
     int x, y;
     int img;
@@ -280,6 +555,7 @@ class ShrubClass: public ActorClass {
 // TODO: If necessary, more methods
   private:
     vector<ActorClass *> rest ;
+    int time;
 };
 
 class BerryClass: public ActorClass, public Edible {
@@ -288,6 +564,8 @@ class BerryClass: public ActorClass, public Edible {
     virtual ~BerryClass();
     void Animation();
 // TODO: If necessary, more methods
+  private:
+    int time;
 };
 
 class SnakeTailClass: public ActorClass {
@@ -298,6 +576,10 @@ class SnakeTailClass: public ActorClass {
     virtual void Animation(list<SnakeTailClass*>::iterator i,
                                             list<SnakeTailClass*>::iterator j);
     virtual void KeyHandler(int dx, int dy);
+    virtual int getDx() const;
+    virtual int getDy() const;
+    virtual int getX() const;
+    virtual int getY() const;
 
   private:
     int dx;
@@ -351,10 +633,10 @@ class GameControlClass: public GameControl {
     static string appName, authors, version;
 
     Actor *snake;
-    Actor *shrubs[N_SHRUBS];
-    Actor *berries[MAX_BERRIES];
+    vector<Actor *> shrubs;
+    list<Actor *> berries;
     Actor *swamp[SWAMP_WIDTH][SWAMP_HEIGHT];
-    int time;
+    int time, berries_period;
 
     virtual void StartNewGame();
 
@@ -389,22 +671,92 @@ void ActorClass::Hide() const
     tyDrawImage(empty_img, x * ACTOR_SIZE, y * ACTOR_SIZE);
 }
 
+int ActorClass::getX() const
+{
+    return this->x;
+}
+
+int ActorClass::getY() const
+{
+    return this->y;
+}
+
+int ActorClass::getImg() const
+{
+    return this->img;
+}
+
+void ActorClass::setImg(int img)
+{
+    this->img = img;
+}
+
 /* Concrete classes implementation */
 
-ShrubClass::ShrubClass(int x, int y): ActorClass(x, y, shrub_img) {}
+ShrubClass::ShrubClass(int x, int y): ActorClass(x, y, shrub_img)
+{
+    this->time = tyRand(81) + 20;
+}
+
 ShrubClass::~ShrubClass() {}
     
 void ShrubClass::Animation()
 {
-    // TODO: Implement the Shrub behavior
+    time--;
+
+    if (time <= 0)
+    {
+        int w = GameControlClass::SWAMP_WIDTH;
+        int h = GameControlClass::SWAMP_HEIGHT;
+        int tx = tyRand(2+1) - 1;
+        int ty = tyRand(2+1) - 1;
+        int dx = (x + w + tx) % w;
+        int dy = (y + h + ty) % h;
+
+        if (control->Get(dx, dy) == 0)
+        {
+            time = tyRand(81) + 20;
+            ActorClass *s = new ShrubClass(dx, dy);
+            control->Set(dx, dy, s);
+            this->rest.push_back(s);
+            s->Show();
+        }
+    }
+
+    for (vector<ActorClass *>::iterator i = rest.begin();
+            i != rest.end(); ++i)
+    {
+        (*i)->Animation();
+    }
 }
 
-BerryClass::BerryClass(int x, int y, int img): ActorClass(x, y, img) {}
+BerryClass::BerryClass(int x, int y, int img): ActorClass(x, y, img) {
+    Show();
+    this->time = tyRand(81) + 20;
+}
 BerryClass::~BerryClass() {}
-    
+
 void BerryClass::Animation()
 {
-    // TODO: Implement the Berry behavior
+    time--;
+
+    if (time == 10)
+    {
+        Hide();
+        if (img == berryBlue_img) img = berryBlueSink_img;
+        else if (img == berryRed_img) img = berryRedSink_img;
+        else if (img == berryPink_img) img = berryPinkSink_img;
+        else if (img == berryGreen_img) img = berryGreenSink_img;
+        else if (img == berryPurple_img) img = berryPurpleSink_img;
+        else if (img == berryYellow_img) img = berryYellowSink_img;
+        Show();
+    }
+    else if (time == 0)
+    {
+        Hide();
+        control->Set(x, y, 0);
+        throw this;
+    }
 }
 
 SnakeTailClass::SnakeTailClass(int x, int y, int dx = 0,
@@ -418,17 +770,17 @@ SnakeTailClass::~SnakeTailClass() {}
 
 void SnakeTailClass::Animation()
 {
-    int w = GameControlClass::SWAMP_WIDTH;
-    int h = GameControlClass::SWAMP_HEIGHT;
-    int nx = (x + w + dx) % w;
-    int ny = (y + h + dy) % h;
-
-    Hide();
-    control->Set(x, y, 0);
-    x = nx;
-    y = ny;
+//    int w = GameControlClass::SWAMP_WIDTH;
+//    int h = GameControlClass::SWAMP_HEIGHT;
+//    int nx = (x + w + dx) % w;
+//    int ny = (y + h + dy) % h;
+//
+//    Hide();
+//    control->Set(x, y, 0);
+//    x = nx;
+//    y = ny;
     Show();
-    control->Set(x, y, this);
+//    control->Set(x, y, this);
 }
 
 void SnakeTailClass::Animation(list<SnakeTailClass*>::iterator i,
@@ -460,6 +812,26 @@ void SnakeTailClass::KeyHandler(int dx, int dy)
     this->dy = dy;
 }
 
+int SnakeTailClass::getDx() const
+{
+    return dx;
+}
+
+int SnakeTailClass::getDy() const
+{
+    return dy;
+}
+
+int SnakeTailClass::getX() const
+{
+    return x;
+}
+
+int SnakeTailClass::getY() const
+{
+    return y;
+}
+
 SnakeClass::SnakeClass(int x, int y):
     ActorClass(x, y, snakeHead_img) {
     dx = 0;
@@ -481,17 +853,50 @@ void SnakeClass::Animation()
 
     Actor *neighbor = control->Get(nx, ny);
     if (dynamic_cast<Edible *>(neighbor) != 0) {
-        delete neighbor;
-        control->Set(nx, ny, 0);
-        neighbor = 0;
+        int img = neighbor->getImg();
+        SnakeTailClass *t = new SnakeTailClass(x, y, 0, 0, img);
+        rest.push_front(t);
+
+        list<SnakeTailClass*>::iterator j = rest.begin();
+
+        for (int i = 0; i < 4 && j != rest.end(); i++, ++j)
+        {
+            if (i == 3) {
+                (*j)->setImg(snakeTail_img);
+            }
+        }
+
+        if (img == berryBlueSink_img || img == berryRedSink_img ||
+                img == berryPinkSink_img || img == berryGreenSink_img
+                || img == berryPurpleSink_img || img == berryYellowSink_img)
+        {
+            SnakeTailClass *tmp = rest.back();
+            rest.push_back(new SnakeTailClass(
+                                (tmp->getX() + w - tmp->getDx()) % w,
+                                (tmp->getY() + h - tmp->getDy()) % h,
+                                tmp->getDx(), tmp->getDy()));
+
+        }
+        int tx, ty;
+        tx = x;
+        ty = y;
+        Hide();
+        x = nx;
+        y = ny;
+        Show();
+        control->Set(x, y, this);
+
+        control->Set(x, y, t);
+        t->Animation();
+        t->KeyHandler(dx, dy);
+        throw neighbor;
 
     }
     else if (neighbor != 0 && dynamic_cast<Edible *>(neighbor) == 0) {
         tyAlertDialog("Loss", "You fail!");
         tyQuit();
     }
-
-    if( neighbor == 0 )
+    else if( neighbor == 0 )
     {
         Hide();
         control->Set(x, y, 0);
@@ -531,6 +936,7 @@ string GameControlClass::version = "FCT/UNL, 2012";
 GameControlClass::GameControlClass()
 {
     CreateImg();
+    berries_period = tyRand(11) + 1;
     tySetup(
         appName.c_str(),
         SWAMP_WIDTH * ActorClass::ACTOR_SIZE,
@@ -587,15 +993,77 @@ void GameControlClass::RedrawHandler()
 
 void GameControlClass::TimerHandler()
 {
-    // TODO: Send animation events to all the actors
     if( time % 10 == 0 ) { // counting seconds
+        berries_period--;
+        if (berries_period == 0 && berries.size() < MAX_BERRIES)
+        {
+            int n_berries = tyRand(5) + 1;
+            int x, y;
+            for (;n_berries > 0; n_berries--)
+            {
+                do
+                {
+                    x = tyRand(SWAMP_WIDTH);
+                    y = tyRand(SWAMP_HEIGHT);
+                } while (this->Get(x, y) != 0);
+
+                int img;
+                switch(tyRand(6)) {
+                case 0: img = berryBlue_img;
+                    break;
+                case 1: img = berryRed_img;
+                    break;
+                case 2: img = berryPink_img;
+                    break;
+                case 3: img = berryGreen_img;
+                    break;
+                case 4: img = berryPurple_img;
+                    break;
+                case 5: img = berryYellow_img;
+                    break;
+                }
+                Actor *b = new BerryClass(x, y, img);
+                this->berries.push_back(b);
+                swamp[x][y] = b;
+            }
+            berries_period = tyRand(11) + 1;
+        }
+
+        for (vector<Actor*>::iterator i = this->shrubs.begin();
+                i != this->shrubs.end(); ++i)
+        {
+            (*i)->Animation();
+        }
+        for (list<Actor*>::iterator i = berries.begin();
+                i != berries.end(); ++i)
+        {
+            try
+            {
+                (*i)->Animation();
+            }
+            catch (BerryClass *b)
+            {
+                berries.remove(b);
+                delete b;
+                break;
+            }
+        }
+
         stringstream ss;
         ss << "TIME = " << time/10;
         tySetStatusText(2, ss.str().c_str());
     }
 
     if( time % 5 == 0) {
-        snake->Animation();
+        try
+        {
+            snake->Animation();
+        }
+        catch (Actor *s)
+        {
+            berries.remove(s);
+            delete s;
+        }
     }
     time++;
 }
@@ -622,12 +1090,15 @@ void GameControlClass::FreeBoard()
                 delete swamp[x][y];
                 swamp[x][y] = 0;
             }
+    shrubs.clear();
+    berries.clear();
 }
 
 void GameControlClass::BuildBoard()
 {
     FreeBoard();
-    int snakeX, snakeY, shrubX, shrubY, berryX, berryY;
+    int snakeX, snakeY, shrubX, shrubY;
+    bool found;
     snakeX = tyRand(SWAMP_WIDTH);
     snakeY = tyRand(SWAMP_HEIGHT);
 
@@ -635,20 +1106,26 @@ void GameControlClass::BuildBoard()
 
     for (int i = 0; i < 10; i++)
     {
-        do
-        {
-            berryX = tyRand(SWAMP_WIDTH);
-            berryY = tyRand(SWAMP_HEIGHT);
-        } while (this->Get(berryX, berryY) != 0);
 
         do
         {
+            found = false;
             shrubX = tyRand(SWAMP_WIDTH);
             shrubY = tyRand(SWAMP_HEIGHT);
-        } while (this->Get(shrubX, shrubY) != 0);
+            for(vector<Actor *>::iterator i = shrubs.begin();
+                    i != shrubs.end(); ++i)
+            {
+                if (tyDistance((*i)->getX(), (*i)->getY(), shrubX, shrubY) < 10)
+                {
+                    found = true;
+                    break;
+                }
+            }
+        } while (this->Get(shrubX, shrubY) != 0 || found);
 
-        swamp[berryX][berryY] = new BerryClass(berryX, berryY, berryBlue_img);
-        swamp[shrubX][shrubY] = new ShrubClass(shrubX, shrubY);
+        Actor *s = new ShrubClass(shrubX, shrubY);
+        this->shrubs.push_back(s);
+        swamp[shrubX][shrubY] = s;
     }
 }
 
