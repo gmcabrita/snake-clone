@@ -928,7 +928,7 @@ void SnakeClass::Animation()
             }
         }
 
-        if (rest.size() > 1) {
+        if (rest.size() > 299) {
             throw SnakeWinsException();
         }
         else
@@ -939,8 +939,6 @@ void SnakeClass::Animation()
     }
     else if (neighbor != 0 && neighbor->calories() == 0) {
         throw SnakeLosesException();
-        // tyAlertDialog("Loss", "You fail!");
-        // tyQuit();
     }
     else if( neighbor == 0 )
     {
@@ -1100,7 +1098,7 @@ void GameControlClass::TimerHandler()
         tySetStatusText(2, ss.str().c_str());
     }
 
-    if( time % 1 == 0) {
+    if( time % 5 == 0) {
         try
         {
             snake->Animation();
