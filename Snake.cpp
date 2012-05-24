@@ -519,11 +519,12 @@ int sinkToNormal(int img)
     return img;
 }
 
+/* Exception declarations */
+
+class SnakeWinsException {};
+class SnakeLosesException {};
 
 /* Declaration of all the classes */
-
-class Edible { // "Interface"
-};
 
 class Actor { // "Interface"
   public:
@@ -532,6 +533,7 @@ class Actor { // "Interface"
     virtual void Show() const =0;
     virtual void Animation() =0;
     virtual void KeyHandler(int dx, int dy) =0;
+    virtual int calories() const =0;
     virtual int getX() const =0;
     virtual int getY() const =0;
     virtual int getImg() const =0;
@@ -548,6 +550,7 @@ class ActorClass: public Actor {
     void Show() const;
     void Animation();
     void KeyHandler(int dx, int dy);
+    int calories() const;
     int getX() const;
     int getY() const;
     int getImg() const;
@@ -555,6 +558,7 @@ class ActorClass: public Actor {
 
   protected:
     int x, y;
+    int num_calories;
     int img;
 // TODO: If necessary, more methods
 };
@@ -570,7 +574,7 @@ class ShrubClass: public ActorClass {
     int time;
 };
 
-class BerryClass: public ActorClass, public Edible {
+class BerryClass: public ActorClass {
   public:
     BerryClass(int x, int y, int img);
     virtual ~BerryClass();
@@ -683,6 +687,11 @@ void ActorClass::Hide() const
     tyDrawImage(empty_img, x * ACTOR_SIZE, y * ACTOR_SIZE);
 }
 
+int ActorClass::calories() const
+{
+    return num_calories;
+}
+
 int ActorClass::getX() const
 {
     return this->x;
@@ -708,6 +717,7 @@ void ActorClass::setImg(int img)
 ShrubClass::ShrubClass(int x, int y): ActorClass(x, y, shrub_img)
 {
     this->time = tyRand(81) + 20;
+    this->num_calories = 0;
 }
 
 ShrubClass::~ShrubClass() {}
@@ -745,6 +755,7 @@ void ShrubClass::Animation()
 BerryClass::BerryClass(int x, int y, int img): ActorClass(x, y, img) {
     Show();
     this->time = tyRand(81) + 20;
+    this->num_calories = 1;
 }
 BerryClass::~BerryClass() {}
 
@@ -761,6 +772,7 @@ void BerryClass::Animation()
         else if (img == berryGreen_img) img = berryGreenSink_img;
         else if (img == berryPurple_img) img = berryPurpleSink_img;
         else if (img == berryYellow_img) img = berryYellowSink_img;
+        num_calories++;
         Show();
     }
     else if (time == 0)
@@ -776,12 +788,10 @@ SnakeTailClass::SnakeTailClass(int x, int y, int dx = 0,
         ActorClass(x, y, img) {
     this->dx = dx;
     this->dy = dy;
+    this->num_calories = 0;
 }
 
-SnakeTailClass::~SnakeTailClass()
-{
-    Hide();
-}
+SnakeTailClass::~SnakeTailClass() {}
 
 void SnakeTailClass::Animation()
 {
@@ -836,6 +846,7 @@ SnakeClass::SnakeClass(int x, int y):
     ActorClass(x, y, snakeHead_img) {
     dx = 0;
     dy = -1;
+    this->num_calories = 0;
     int h = GameControlClass::SWAMP_HEIGHT;
 
     // add snake tail(initially only 1 node)
@@ -852,7 +863,7 @@ void SnakeClass::Animation()
     int ny = (y + h + dy) % h;
 
     Actor *neighbor = control->Get(nx, ny);
-    if (dynamic_cast<Edible *>(neighbor) != 0) {
+    if (neighbor != 0 && neighbor->calories() != 0) {
         int img = neighbor->getImg();
         int img2 = sinkToNormal(img);
         bool repeat = false;
@@ -874,9 +885,7 @@ void SnakeClass::Animation()
             }
         }
 
-        if (img == berryBlueSink_img || img == berryRedSink_img ||
-                img == berryPinkSink_img || img == berryGreenSink_img
-                || img == berryPurpleSink_img || img == berryYellowSink_img)
+        if (neighbor->calories() > 1)
         {
             SnakeTailClass *tmp = rest.back();
             rest.push_back(new SnakeTailClass(
@@ -899,32 +908,39 @@ void SnakeClass::Animation()
         t->Show();
         t->KeyHandler(dx, dy);
 
-        // TODO: fix this shit
         if (repeat)
         {
             list<SnakeTailClass*>::reverse_iterator x = rest.rbegin();
             int size = rest.size();
-            for (int i = size; i > size/2 &&
-                x != rest.rend(); i--, --x)
+            int i;
+            SnakeTailClass *t;
+            for (i = size; i > 0 && i > (size/2) &&
+                x != rest.rend(); --i, ++x)
             {
-                SnakeTailClass *t = (*x);
-                control->Set(t->getX(), t->getY(), 0);
+                t = (*x);
                 t->Hide();
-                delete t;
+                control->Set(t->getX(), t->getY(), 0);
             }
 
-            for (int i = size; i > size/2; i--)
+            for (; i < size; i++)
             {
                 rest.pop_back();
             }
         }
 
-        throw neighbor;
+        if (rest.size() > 1) {
+            throw SnakeWinsException();
+        }
+        else
+        {
+            throw neighbor;
+        }
 
     }
-    else if (neighbor != 0 && dynamic_cast<Edible *>(neighbor) == 0) {
-        tyAlertDialog("Loss", "You fail!");
-        tyQuit();
+    else if (neighbor != 0 && neighbor->calories() == 0) {
+        throw SnakeLosesException();
+        // tyAlertDialog("Loss", "You fail!");
+        // tyQuit();
     }
     else if( neighbor == 0 )
     {
@@ -1093,6 +1109,18 @@ void GameControlClass::TimerHandler()
         {
             berries.remove(s);
             delete s;
+        }
+        catch (SnakeWinsException e)
+        {
+            stringstream ss;
+            ss << "You win!"<< endl << "Score: " << time/10;
+            tyAlertDialog("Win", ss.str().c_str());
+            tyQuit();
+        }
+        catch (SnakeLosesException e)
+        {
+            tyAlertDialog("Lose", "You lose!");
+            tyQuit();
         }
     }
     time++;
