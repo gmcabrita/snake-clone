@@ -821,7 +821,7 @@ SnakeClass::SnakeClass(int x, int y):
     int h = GameControlClass::SWAMP_HEIGHT;
 
     // add snake tail(initially only 1 node)
-    SnakeTailClass *tail = new SnakeTailClass(x, (y + h + 1) % h);
+    Actor *tail = new SnakeTailClass(x, (y + h + 1) % h);
     this->rest.push_front(tail);
 }
 SnakeClass::~SnakeClass() {}
@@ -838,7 +838,7 @@ void SnakeClass::Animation()
         int img = neighbor->getImg();
         int img2 = sinkToNormal(img);
         bool repeat = false;
-        SnakeTailClass *t = new SnakeTailClass(x, y, 0, 0, img2);
+        Actor *t = new SnakeTailClass(x, y, 0, 0, img2);
         rest.push_front(t);
         list<Actor*>::iterator j = rest.begin();
         ++j; // ignore the one we just added
