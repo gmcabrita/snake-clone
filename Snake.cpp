@@ -570,7 +570,7 @@ class ShrubClass: public ActorClass {
     void Animation();
 // TODO: If necessary, more methods
   private:
-    vector<ActorClass *> rest ;
+    vector<Actor *> rest ;
     int time;
 };
 
@@ -745,7 +745,7 @@ void ShrubClass::Animation()
         }
     }
 
-    for (vector<ActorClass *>::iterator i = rest.begin();
+    for (vector<Actor *>::iterator i = rest.begin();
             i != rest.end(); ++i)
     {
         (*i)->Animation();
@@ -1098,7 +1098,7 @@ void GameControlClass::TimerHandler()
         tySetStatusText(2, ss.str().c_str());
     }
 
-    if( time % 5 == 0) {
+    if( time % 1 == 0) {
         try
         {
             snake->Animation();
