@@ -741,7 +741,7 @@ void ShrubClass::Animation()
         if (control->Get(dx, dy) == 0)
         {
             time = tyRand(81) + 20;
-            ActorClass *s = new ShrubClass(dx, dy);
+            Actor *s = new ShrubClass(dx, dy);
             control->Set(dx, dy, s);
             this->rest.push_back(s);
             s->Show();
@@ -899,7 +899,7 @@ void SnakeClass::Animation()
             }
         }
 
-        if (rest.size() > 299) {
+        if (rest.size() >= 299) {
             throw SnakeWinsException();
         }
         else
@@ -1072,7 +1072,7 @@ void GameControlClass::TimerHandler()
             {
                 (*i)->Animation();
             }
-            catch (BerryClass *b)
+            catch (Actor *b)
             {
                 berries.remove(b);
                 delete b;
