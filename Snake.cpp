@@ -507,18 +507,6 @@ void CreateImg()
     snakeTail_img = tyCreateImage(snakeTail_xpm);
 }
 
-int sinkToNormal(int img)
-{
-    if (img == berryBlueSink_img) return berryBlue_img;
-    else if (img == berryRedSink_img) return berryRed_img;
-    else if (img == berryPinkSink_img) return berryPink_img;
-    else if (img == berryGreenSink_img) return berryGreen_img;
-    else if (img == berryPurpleSink_img) return berryPurple_img;
-    else if (img == berryYellowSink_img) return berryYellow_img;
-
-    return img;
-}
-
 /* Exception declarations */
 
 class SnakeWinsException {};
@@ -540,6 +528,7 @@ class Actor { // "Interface"
     virtual int getDy() const =0;
     virtual int getImg() const =0;
     virtual void setImg(int img) =0;
+    virtual int sinkToNormal(int img) const =0;
 // TODO: If necessary, more methods
 };
 
@@ -559,6 +548,7 @@ class ActorClass: public Actor {
     int getDy() const;
     int getImg() const;
     void setImg(int img);
+    int sinkToNormal(int img) const;
 
   protected:
     int x, y, dx, dy;
@@ -713,6 +703,18 @@ int ActorClass::getImg() const
 void ActorClass::setImg(int img)
 {
     this->img = img;
+}
+
+int ActorClass::sinkToNormal(int img) const
+{
+    if (img == berryBlueSink_img) return berryBlue_img;
+    else if (img == berryRedSink_img) return berryRed_img;
+    else if (img == berryPinkSink_img) return berryPink_img;
+    else if (img == berryGreenSink_img) return berryGreen_img;
+    else if (img == berryPurpleSink_img) return berryPurple_img;
+    else if (img == berryYellowSink_img) return berryYellow_img;
+
+    return img;
 }
 
 /* Concrete classes implementation */
