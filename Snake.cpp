@@ -536,6 +536,8 @@ class Actor { // "Interface"
     virtual int calories() const =0;
     virtual int getX() const =0;
     virtual int getY() const =0;
+    virtual int getDx() const =0;
+    virtual int getDy() const =0;
     virtual int getImg() const =0;
     virtual void setImg(int img) =0;
 // TODO: If necessary, more methods
@@ -543,7 +545,7 @@ class Actor { // "Interface"
 
 class ActorClass: public Actor {
   public:
-    ActorClass(int x, int y, int img);
+    ActorClass(int x, int y, int img, int dx, int dy);
     virtual ~ActorClass();
     static const int ACTOR_SIZE = 16;
     void Hide() const;
@@ -553,11 +555,13 @@ class ActorClass: public Actor {
     int calories() const;
     int getX() const;
     int getY() const;
+    int getDx() const;
+    int getDy() const;
     int getImg() const;
     void setImg(int img);
 
   protected:
-    int x, y;
+    int x, y, dx, dy;
     int num_calories;
     int img;
 // TODO: If necessary, more methods
@@ -589,17 +593,7 @@ class SnakeTailClass: public ActorClass {
     SnakeTailClass(int x, int y, int dx, int dy, int img);
     virtual ~SnakeTailClass();
     void Animation();
-    virtual void Animation(list<SnakeTailClass*>::iterator i,
-                                            list<SnakeTailClass*>::iterator j);
     virtual void KeyHandler(int dx, int dy);
-    virtual int getDx() const;
-    virtual int getDy() const;
-    virtual int getX() const;
-    virtual int getY() const;
-
-  private:
-    int dx;
-    int dy;
 };
 
 class SnakeClass: public ActorClass {
@@ -611,9 +605,7 @@ class SnakeClass: public ActorClass {
 
 // TODO: If necessary, more methods
   private:
-    int dx;
-    int dy;
-    list<SnakeTailClass *> rest ;
+    list<Actor *> rest ;
 };
 
 class GameControl { // "Interface"
@@ -672,7 +664,8 @@ GameControl *control;
 
 Actor::~Actor() {}
 
-ActorClass::ActorClass(int x, int y, int img): x(x), y(y), img(img) {}
+ActorClass::ActorClass(int x, int y, int img, int dx=0, int dy=0):
+    x(x), y(y), dx(dx), dy(dy), img(img) {}
 ActorClass::~ActorClass() {}
 void ActorClass::Animation() {} // Default: do nothing
 void ActorClass::KeyHandler(int dx, int xy) {} // Default: do nothing
@@ -700,6 +693,16 @@ int ActorClass::getX() const
 int ActorClass::getY() const
 {
     return this->y;
+}
+
+int ActorClass::getDx() const
+{
+    return dx;
+}
+
+int ActorClass::getDy() const
+{
+    return dy;
 }
 
 int ActorClass::getImg() const
@@ -785,9 +788,7 @@ void BerryClass::Animation()
 
 SnakeTailClass::SnakeTailClass(int x, int y, int dx = 0,
                                         int dy = -1, int img = snakeTail_img):
-        ActorClass(x, y, img) {
-    this->dx = dx;
-    this->dy = dy;
+        ActorClass(x, y, img, dx, dy) {
     this->num_calories = 0;
 }
 
@@ -795,21 +796,6 @@ SnakeTailClass::~SnakeTailClass() {}
 
 void SnakeTailClass::Animation()
 {
-//    int w = GameControlClass::SWAMP_WIDTH;
-//    int h = GameControlClass::SWAMP_HEIGHT;
-//    int nx = (x + w + dx) % w;
-//    int ny = (y + h + dy) % h;
-//
-//    Hide();
-//    control->Set(x, y, 0);
-//    x = nx;
-//    y = ny;
-    Show();
-//    control->Set(x, y, this);
-}
-
-void SnakeTailClass::Animation(list<SnakeTailClass*>::iterator i,
-                                list<SnakeTailClass*>::iterator j) {
     int w = GameControlClass::SWAMP_WIDTH;
     int h = GameControlClass::SWAMP_HEIGHT;
     int nx = (x + w + dx) % w;
@@ -821,14 +807,6 @@ void SnakeTailClass::Animation(list<SnakeTailClass*>::iterator i,
     y = ny;
     Show();
     control->Set(x, y, this);
-
-    // update next tail 'node'
-    SnakeTailClass *s = *i;
-    if (i != j)
-    {
-        s->Animation(++i, j);
-        s->KeyHandler(this->dx, this->dy);
-    }
 }
 
 void SnakeTailClass::KeyHandler(int dx, int dy)
@@ -837,15 +815,8 @@ void SnakeTailClass::KeyHandler(int dx, int dy)
     this->dy = dy;
 }
 
-int SnakeTailClass::getDx() const { return dx; }
-int SnakeTailClass::getDy() const { return dy; }
-int SnakeTailClass::getX() const { return x; }
-int SnakeTailClass::getY() const { return y; }
-
 SnakeClass::SnakeClass(int x, int y):
-    ActorClass(x, y, snakeHead_img) {
-    dx = 0;
-    dy = -1;
+    ActorClass(x, y, snakeHead_img, 0, -1) {
     this->num_calories = 0;
     int h = GameControlClass::SWAMP_HEIGHT;
 
@@ -869,7 +840,7 @@ void SnakeClass::Animation()
         bool repeat = false;
         SnakeTailClass *t = new SnakeTailClass(x, y, 0, 0, img2);
         rest.push_front(t);
-        list<SnakeTailClass*>::iterator j = rest.begin();
+        list<Actor*>::iterator j = rest.begin();
         ++j; // ignore the one we just added
 
         for (int i = 1; i < 5 && j != rest.end(); i++, ++j)
@@ -887,7 +858,7 @@ void SnakeClass::Animation()
 
         if (neighbor->calories() > 1)
         {
-            SnakeTailClass *tmp = rest.back();
+            Actor *tmp = rest.back();
             rest.push_back(new SnakeTailClass(
                                 (tmp->getX() + w - tmp->getDx()) % w,
                                 (tmp->getY() + h - tmp->getDy()) % h,
@@ -910,10 +881,10 @@ void SnakeClass::Animation()
 
         if (repeat)
         {
-            list<SnakeTailClass*>::reverse_iterator x = rest.rbegin();
+            list<Actor*>::reverse_iterator x = rest.rbegin();
             int size = rest.size();
             int i;
-            SnakeTailClass *t;
+            Actor *t;
             for (i = size; i > 0 && i > (size/2) &&
                 x != rest.rend(); --i, ++x)
             {
@@ -949,20 +920,36 @@ void SnakeClass::Animation()
         Show();
         control->Set(x, y, this);
 
-        list<SnakeTailClass*>::iterator i = rest.begin();
+        Actor *current;
+        Actor *previous = this;
+        for (list<Actor*>::iterator i = rest.begin();
+            i != rest.end(); ++i)
+        {
+            current = (*i);
+            current->Animation();
+            previous = (*i);
 
-        SnakeTailClass *s = *i;
-        s->Animation(++i, rest.end());
-        s->KeyHandler(this->dx, this->dy);
+        }
+
+        list<Actor*>::reverse_iterator i = rest.rbegin();
+
+        current = (*i);
+        i++;
+        for (;i != rest.rend(); ++i)
+        {
+            previous = (*i);
+            current->KeyHandler(previous->getDx(), previous->getDy());
+            current = (*i);
+
+        }
+        current->KeyHandler(this->getDx(), this->getDy());
     }
 }
 
 void SnakeClass::KeyHandler(int dx, int dy)
 {
-    if (this->dx + dx != 0 && this->dy + dy != 0) {
-        this->dx = dx;
-        this->dy = dy;
-    }
+    this->dx = dx;
+    this->dy = dy;
 }
 
 /* GameControlClass implementation */
