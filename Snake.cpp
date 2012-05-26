@@ -463,7 +463,7 @@ class Actor { // "Interface"
     virtual int getImg() const =0;
     virtual void setImg(int img) =0;
     virtual int sinkToNormal(int img) const =0;
-    virtual void kill() =0;
+    virtual void kill() const =0;
 };
 
 class ActorClass: public Actor {
@@ -484,7 +484,7 @@ class ActorClass: public Actor {
     int getImg() const;
     void setImg(int img);
     int sinkToNormal(int img) const;
-    void kill();
+    void kill() const;
 
   protected:
     int x, y, dx, dy;
@@ -664,7 +664,7 @@ int ActorClass::sinkToNormal(int img) const
 }
 
 // Kill the actor.
-void ActorClass::kill()
+void ActorClass::kill() const
 {
     delete this;
 }
