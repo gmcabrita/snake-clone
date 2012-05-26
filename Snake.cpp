@@ -3,12 +3,13 @@
     Filipe Fernandes,   34525
 
     LAP - Project 3
+
+    Everything has been implemented as requested and is fully working.
 */
 
 #include "wxTiny.h"
 #include <string>
 #include <sstream>
-#include <iostream> // delete
 #include <vector>
 #include <list>
 
@@ -340,48 +341,6 @@ XpmImage berryYellowSink_xpm = {
 "     XXXXX      ",
 "                "};
 
-// XpmImage snakeHead_xpm = {
-// /* columns rows colors chars-per-pixel */
-// "16 16 21 1",
-// "   c White",
-// ".  c #000000",
-// "+  c #DBB600",
-// "@  c #DB9200",
-// "#  c #DB9249",
-// "$  c #DBDB49",
-// "%  c #FFFF00",
-// "&  c #DBB649",
-// "*  c #DBDB92",
-// "=  c #6D6D49",
-// "-  c #B6B6B6",
-// ";  c #FFFFFF",
-// ">  c #6D4949",
-// ",  c #494949",
-// "'  c #DBDB00",
-// ")  c #920000",
-// "!  c #DB4900",
-// "~  c #DB2400",
-// "{  c #DB92B6",
-// "]  c #DBB692",
-// "^  c #922400",
-// /* pixels */
-// "                ",
-// "     .....      ",
-// "   ..+@#+@..    ",
-// "  .@#@$%$@&@.   ",
-// " .@&*******+#.  ",
-// " .@*=.-;>.-*+.  ",
-// ".+**.%;;.%;**@. ",
-// ".**%-.,;-.,%**. ",
-// ".*%$;;;;;;;$'*. ",
-// ".*''';;;;;''$*. ",
-// ".**)))))))))**. ",
-// " .*)!~!~!~!)*.  ",
-// " .+#)!{{]!)@+.  ",
-// "  .@@)^)))@&.   ",
-// "   ..@@#+#..    ",
-// "     .....      "};
-
 XpmImage snakeHead_xpm = {
 "16 16 31 1",
 "   c None",
@@ -432,31 +391,6 @@ XpmImage snakeHead_xpm = {
 "...++++21+++++..",
 "................"
 };
-
-// XpmImage snakeTail_xpm = {
-// /* columns rows colors chars-per-pixel */
-// "16 16 3 1",
-// /* colors */
-// "   c White",
-// "X  c Yellow",
-// ".  c Black",
-// /* pixels */
-// "                ",
-// "     .....      ",
-// "   ..XXXXX..    ",
-// "  .XXXXXXXXX.   ",
-// " .XXXXXXXXXXX.  ",
-// " .XXXXXXXXXXXX. ",
-// ".XXXXXXXXXXXXX. ",
-// ".XXXXXXXXXXXXX. ",
-// ".XXXXXXXXXXXXX. ",
-// ".XXXXXXXXXXXXX. ",
-// ".XXXXXXXXXXXXX. ",
-// " .XXXXXXXXXXX.  ",
-// " .XXXXXXXXXXX.  ",
-// "  .XXXXXXXXX.   ",
-// "   ..XXXXX..    ",
-// "     .....      "};
 
 XpmImage snakeTail_xpm = {
 "16 16 4 1",
@@ -529,7 +463,7 @@ class Actor { // "Interface"
     virtual int getImg() const =0;
     virtual void setImg(int img) =0;
     virtual int sinkToNormal(int img) const =0;
-// TODO: If necessary, more methods
+    virtual void kill() =0;
 };
 
 class ActorClass: public Actor {
@@ -537,6 +471,7 @@ class ActorClass: public Actor {
     ActorClass(int x, int y, int img, int dx, int dy);
     virtual ~ActorClass();
     static const int ACTOR_SIZE = 16;
+
     void Hide() const;
     void Show() const;
     void Animation();
@@ -549,12 +484,12 @@ class ActorClass: public Actor {
     int getImg() const;
     void setImg(int img);
     int sinkToNormal(int img) const;
+    void kill();
 
   protected:
     int x, y, dx, dy;
     int num_calories;
     int img;
-// TODO: If necessary, more methods
 };
 
 class ShrubClass: public ActorClass {
@@ -562,7 +497,7 @@ class ShrubClass: public ActorClass {
     ShrubClass(int x, int y);
     virtual ~ShrubClass();
     void Animation();
-// TODO: If necessary, more methods
+
   private:
     vector<Actor *> rest ;
     int time;
@@ -573,7 +508,7 @@ class BerryClass: public ActorClass {
     BerryClass(int x, int y, int img);
     virtual ~BerryClass();
     void Animation();
-// TODO: If necessary, more methods
+
   private:
     int time;
 };
@@ -589,11 +524,12 @@ class SnakeTailClass: public ActorClass {
 class SnakeClass: public ActorClass {
   public:
     SnakeClass(int x, int y);
+
     virtual ~SnakeClass();
+
     void KeyHandler(int dx, int dy);
     void Animation();
 
-// TODO: If necessary, more methods
   private:
     list<Actor *> rest ;
 };
@@ -602,7 +538,6 @@ class GameControl { // "Interface"
   public:
     virtual Actor *Get(int x, int y) const =0;
     virtual void Set(int x, int y, Actor *a) =0;
-
     virtual void KeyHandler(int dx, int xy) =0; // Player pressed a game key
     virtual void MenuHandler(CStr command) =0; // Player selected a menu
     virtual void RedrawHandler() =0; // When the window needs redrawing
@@ -620,8 +555,8 @@ class GameControlClass: public GameControl {
     static const int MAX_BERRIES = 100;
 
     Actor *Get(int x, int y) const;
-    void Set(int x, int y, Actor *a);
 
+    void Set(int x, int y, Actor *a);
     void KeyHandler(int dx, int xy);
     void MenuHandler(CStr command);
     void RedrawHandler();
@@ -670,41 +605,52 @@ void ActorClass::Hide() const
     tyDrawImage(empty_img, x * ACTOR_SIZE, y * ACTOR_SIZE);
 }
 
+// Returns the number of calories an actor has.
+// = 0 is non-Edible
+// > 0 is Edible
 int ActorClass::calories() const
 {
     return num_calories;
 }
 
+// Returns the position x of the actor.
 int ActorClass::getX() const
 {
     return this->x;
 }
 
+// Returns the position y of the actor.
 int ActorClass::getY() const
 {
     return this->y;
 }
 
+// Returns the direction of the actor in the x axis.
 int ActorClass::getDx() const
 {
     return dx;
 }
 
+// Returns the direction of the actor in the y axis.
 int ActorClass::getDy() const
 {
     return dy;
 }
 
+// Returns the image of the actor.
 int ActorClass::getImg() const
 {
     return this->img;
 }
 
+// Sets the image of the actor.
 void ActorClass::setImg(int img)
 {
     this->img = img;
 }
 
+// Returns the non-sink image of a berry.
+// If the given image is not a berry return the same image.
 int ActorClass::sinkToNormal(int img) const
 {
     if (img == berryBlueSink_img) return berryBlue_img;
@@ -715,6 +661,12 @@ int ActorClass::sinkToNormal(int img) const
     else if (img == berryYellowSink_img) return berryYellow_img;
 
     return img;
+}
+
+// Kill the actor.
+void ActorClass::kill()
+{
+    delete this;
 }
 
 /* Concrete classes implementation */
@@ -750,6 +702,7 @@ void ShrubClass::Animation()
         }
     }
 
+    // animate the rest of the shrubs in the 'family'
     for (vector<Actor *>::iterator i = rest.begin();
             i != rest.end(); ++i)
     {
@@ -770,6 +723,7 @@ void BerryClass::Animation()
 
     if (time == 10)
     {
+        // swap berry image to sink version
         Hide();
         if (img == berryBlue_img) img = berryBlueSink_img;
         else if (img == berryRed_img) img = berryRedSink_img;
@@ -777,7 +731,7 @@ void BerryClass::Animation()
         else if (img == berryGreen_img) img = berryGreenSink_img;
         else if (img == berryPurple_img) img = berryPurpleSink_img;
         else if (img == berryYellow_img) img = berryYellowSink_img;
-        num_calories++;
+        num_calories++; // sinking berry is worth 2 calories
         Show();
     }
     else if (time == 0)
@@ -823,7 +777,7 @@ SnakeClass::SnakeClass(int x, int y):
     int h = GameControlClass::SWAMP_HEIGHT;
 
     // add snake tail(initially only 1 node)
-    Actor *tail = new SnakeTailClass(x, (y + h + 1) % h);
+    Actor *tail = new SnakeTailClass(x, (y + h - dy) % h);
     this->rest.push_front(tail);
 }
 SnakeClass::~SnakeClass() {}
@@ -836,6 +790,8 @@ void SnakeClass::Animation()
     int ny = (y + h + dy) % h;
 
     Actor *neighbor = control->Get(nx, ny);
+
+    // neighbor exists and is edible
     if (neighbor != 0 && neighbor->calories() != 0) {
         int img = neighbor->getImg();
         int img2 = sinkToNormal(img);
@@ -847,19 +803,23 @@ void SnakeClass::Animation()
 
         for (int i = 1; i < 5 && j != rest.end(); i++, ++j)
         {
+            // check if the berry we just ate has been eaten in the last 3 bites
             if ((*j)->getImg() == img2)
             {
                 repeat = true;
             }
 
+            // swap last colored berry in stomach to a snaketail image
             if (i == 3)
             {
                 (*j)->setImg(snakeTail_img);
             }
         }
 
+        // check if berry we ate was sinking
         if (neighbor->calories() > 1)
         {
+            // add another tail cell in the back
             Actor *tmp = rest.back();
             rest.push_back(new SnakeTailClass(
                                 (tmp->getX() + w - tmp->getDx()) % w,
@@ -877,12 +837,16 @@ void SnakeClass::Animation()
         Show();
         control->Set(x, y, this);
 
+        // setup the new berry cell in the tail
         control->Set(tx, ty, t);
         t->Show();
         t->KeyHandler(dx, dy);
 
+        // berry we just ate was repeated
         if (repeat)
         {
+            // iterate everything in reverse
+            // remove half the tail
             list<Actor*>::reverse_iterator x = rest.rbegin();
             int size = rest.size();
             int i;
@@ -897,10 +861,12 @@ void SnakeClass::Animation()
 
             for (; i < size; i++)
             {
+                // need to pop the elements from the container
                 rest.pop_back();
             }
         }
 
+        // total of >=300 cells so the game ends in a win
         if (rest.size() >= 299) {
             throw SnakeWinsException();
         }
@@ -910,9 +876,11 @@ void SnakeClass::Animation()
         }
 
     }
+    // neighbor exists and is not edible, game ends in a loss
     else if (neighbor != 0 && neighbor->calories() == 0) {
         throw SnakeLosesException();
     }
+    // neighbor does not exist
     else if( neighbor == 0 )
     {
         Hide();
@@ -924,6 +892,7 @@ void SnakeClass::Animation()
 
         Actor *current;
         Actor *previous = this;
+        // animate the tail of the snake
         for (list<Actor*>::iterator i = rest.begin();
             i != rest.end(); ++i)
         {
@@ -937,6 +906,8 @@ void SnakeClass::Animation()
 
         current = (*i);
         i++;
+        // update the tail directions
+        // every node gets the previous node's direction values
         for (;i != rest.rend(); ++i)
         {
             previous = (*i);
@@ -969,6 +940,7 @@ string GameControlClass::version = "FCT/UNL, 2012";
 GameControlClass::GameControlClass()
 {
     CreateImg();
+    // generate next berry spawn time
     berries_period = tyRand(11) + 1;
     tySetup(
         appName.c_str(),
@@ -1028,18 +1000,25 @@ void GameControlClass::TimerHandler()
 {
     if( time % 10 == 0 ) { // counting seconds
         berries_period--;
+
+        // time to spawn some berries
         if (berries_period == 0 && berries.size() < MAX_BERRIES)
         {
+            // generate the number of berries we're spawning
             int n_berries = tyRand(5) + 1;
             int x, y;
+
+            // spawn the actual berries
             for (;n_berries > 0; n_berries--)
             {
                 do
                 {
+                    // get (x,y) for the berry
                     x = tyRand(SWAMP_WIDTH);
                     y = tyRand(SWAMP_HEIGHT);
                 } while (this->Get(x, y) != 0);
 
+                // randomize its color
                 int img;
                 switch(tyRand(6)) {
                 case 0: img = berryBlue_img;
@@ -1055,18 +1034,25 @@ void GameControlClass::TimerHandler()
                 case 5: img = berryYellow_img;
                     break;
                 }
+
+                // berry is spawned and added to the berry container
                 Actor *b = new BerryClass(x, y, img);
                 this->berries.push_back(b);
                 swamp[x][y] = b;
             }
+
+            // generate the next berry spawn time
             berries_period = tyRand(11) + 1;
         }
 
+        // animate ALL the shrubs
         for (vector<Actor*>::iterator i = this->shrubs.begin();
                 i != this->shrubs.end(); ++i)
         {
             (*i)->Animation();
         }
+
+        // animate ALL the berries
         for (list<Actor*>::iterator i = berries.begin();
                 i != berries.end(); ++i)
         {
@@ -1076,8 +1062,9 @@ void GameControlClass::TimerHandler()
             }
             catch (Actor *b)
             {
+                // berry has sunk, kill it
                 berries.remove(b);
-                delete b;
+                b->kill();
                 break;
             }
         }
@@ -1094,11 +1081,13 @@ void GameControlClass::TimerHandler()
         }
         catch (Actor *s)
         {
+            // berry was devoured, kill it
             berries.remove(s);
-            delete s;
+            s->kill();
         }
         catch (SnakeWinsException e)
         {
+            // snake has won!
             stringstream ss;
             ss << "You win!"<< endl << "Score: " << time/10;
             tyAlertDialog("Win", ss.str().c_str());
@@ -1106,6 +1095,7 @@ void GameControlClass::TimerHandler()
         }
         catch (SnakeLosesException e)
         {
+            // snake has lost!
             tyAlertDialog("Lose", "You lose!");
             tyQuit();
         }
@@ -1147,8 +1137,11 @@ void GameControlClass::BuildBoard()
     snakeX = tyRand(SWAMP_WIDTH);
     snakeY = tyRand(SWAMP_HEIGHT);
 
+    // spawn the snake
     swamp[snakeX][snakeY] = snake = new SnakeClass(snakeX, snakeY);
 
+    // generate and spawn the 10 shrubs while making sure they are at least 10
+    // cells away from each other
     for (int i = 0; i < 10; i++)
     {
 
@@ -1168,6 +1161,7 @@ void GameControlClass::BuildBoard()
             }
         } while (this->Get(shrubX, shrubY) != 0 || found);
 
+        // finally spawn the shrub and add it to the container
         Actor *s = new ShrubClass(shrubX, shrubY);
         this->shrubs.push_back(s);
         swamp[shrubX][shrubY] = s;
